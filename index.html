@@ -4,12 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mijn Pokedex</title>
-
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="stylesheet" href="https://fonts.googleapigs.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- Link naar je aparte CSS-bestand (volgt in Stap 2) -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    
+<body class="min-h-screen flex flex-col items-center p-4">
 
+    <!-- Loading Screen (wordt later getoond/verborgen met JS) -->
+    <div id="loading-screen" class="loading-screen fixed inset-0 flex items-center justify-center hidden">
+        <div class="flex flex-col items-center space-y-4 p-8 rounded-lg shadow-lg bg-white">
+            <div class="spinner"></div>
+            <p class="text-xl text-gray-700">Pokémon laden...</p>
+        </div>
+    </div>
+
+    <!-- Cookies Banner (wordt later getoond/verborgen met JS) -->
+    <div id="cookies-banner" class="cookies-banner fixed bottom-4 left-4 right-4 md:left-auto md:w-96 flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 hidden">
+        <p class="text-sm text-center md:text-left">
+            We gebruiken cookies om de functionaliteit van de Pokedex te garanderen. Door verder te gaan, stem je hiermee in.
+        </p>
+        <div class="flex space-x-2">
+            <button id="accept-cookies" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md text-sm transition duration-200 ease-in-out">Akkoord</button>
+            <button id="close-cookies" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md text-sm transition duration-200 ease-in-out">Sluiten</button>
+        </div>
+    </div>
+
+
+    <header class="w-full max-w-5xl text-center py-6">
+        <h1 class="text-5xl font-bold text-red-600 mb-4 tracking-tight">Pokedex</h1>
+        <p class="text-lg text-gray-700">Ontdek en leer alles over je favoriete Pokémon!</p>
+    </header>
+
+    <main class="w-full max-w-5xl bg-white p-6 rounded-3xl shadow-xl mb-8">
+        <!-- Controls Section (voor filters en sorteerknoppen) -->
+        <section class="mb-8 p-4 bg-gray-50 rounded-2xl shadow-inner">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 items-center">
+                <!-- Generation Dropdown -->
+                <div>
+                    <label for="generation-select" class="block text-gray-700 text-sm font-semibold mb-2">Selecteer Generatie:</label>
+                    <div class="relative">
+                        <select id="generation-select" aria-label="Selecteer Pokémon generatie" class="block w-full px-4 py-2 pr-8 rounded-xl border border-gray-300 bg-white text-gray-800 shadow-sm focus:ring-red-500 focus:border-red-500 appearance-none transition duration-200 ease-in-out">
+                            <!-- Opties worden later gevuld met JS -->
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="md:col-span-1 lg:col-span-2">
+                    <label for="search-input" class="block text-gray-700 text-sm font-semibold mb-2">Zoek Pokémon op naam:</label>
+                    <div class="relative">
+                        <input type="text" id="search-input" aria-label="Zoek Pokémon op naam" placeholder="Bijv. Pikachu" class="block w-full px-4 py-2 pr-10 rounded-xl border border-gray-300 text-gray-800 shadow-sm focus:ring-red-500 focus:border-red-500 transition duration-200 ease-in-out">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sort and Filter Buttons -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <button id="sort-index-asc" aria-label="Sorteer op Pokedex index oplopend" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition duration-200 ease-in-out">Index ASC</button>
+                <button id="sort-index-desc" aria-label="Sorteer op Pokedex index aflopend" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition duration-200 ease-in-out">Index DESC</button>
+                <button id="sort-name-asc" aria-label="Sorteer op naam alfabetisch oplopend" class="px-4 py-2 bg-purple-500 text-white font-semibold rounded-lg shadow hover:bg-purple-600 transition duration-200 ease-in-out">Naam A-Z</button>
+                <button id="sort-name-desc" aria-label="Sorteer op naam alfabetisch aflopend" class="px-4 py-2 bg-purple-500 text-white font-semibold rounded-lg shadow hover:bg-purple-600 transition duration-200 ease-in-out">Naam Z-A</button>
+                <div class="relative col-span-2 sm:col-span-1 lg:col-span-1">
+                    <select id="type-filter-select" aria-label="Filter op type" class="block w-full px-4 py-2 pr-8 rounded-lg border border-gray-300 bg-gray-200 text-gray-800 shadow-sm focus:ring-green-500 focus:border-green-500 appearance-none transition duration-200 ease-in-out">
+                        <option value="all">Alle Types</option>
+                        <!-- Types worden later gevuld met JS -->
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        <!-- Pokémon Grid (hier komen de Pokémon kaarten) -->
+        <section id="pokemon-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <!-- Pokémon kaarten worden hier met JS geïnjecteerd -->
+        </section>
+
+        <!-- No Results Message (wordt getoond als er geen Pokémon zijn gevonden) -->
+        <div id="no-results-message" class="hidden text-center text-gray-600 text-xl font-semibold py-10">
+            Geen Pokémon gevonden die overeenkomen met je criteria.
+        </div>
+    </main>
+
+    <!-- Pokémon Detail Modal (pop-up voor gedetailleerde info) -->
+    <div id="pokemon-detail-modal" class="modal-overlay fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="modal-content w-full md:w-3/4 lg:w-2/3 p-6 relative">
+            <button id="close-modal" aria-label="Sluit gedetailleerde Pokémon informatie" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold transition duration-200 ease-in-out">&times;</button>
+            <div id="modal-content-area" class="flex flex-col md:flex-row items-center md:items-start md:space-x-8 p-4">
+                <!-- Gedetailleerde Pokémon info wordt hier geïnjecteerd -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Link naar je aparte JavaScript-bestand (volgt in Stap 3) -->
     <script src="script.js" defer></script>
 </body>
 </html>
