@@ -1,0 +1,101 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f0f0; /* Lichte achtergrond */
+}
+.pokemon-card {
+    background-color: #ffffff;
+    border-radius: 1rem; /* Afgeronde hoeken */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+.pokemon-card:hover {
+    transform: translateY(-5px);
+}
+.type-badge {
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: white;
+    white-space: nowrap; /* Voorkom afbreken van type namen */
+}
+/* Kleuren voor Pokémon types (basis set, kan uitgebreid worden) */
+.type-normal { background-color: #A8A77A; }
+.type-fire { background-color: #EE8130; }
+.type-water { background-color: #6390F0; }
+.type-grass { background-color: #7AC74C; }
+.type-electric { background-color: #F7D02C; }
+.type-ice { background-color: #96D9D6; }
+.type-fighting { background-color: #C22E28; }
+.type-poison { background-color: #A33EA1; }
+.type-ground { background-color: #E2BF65; }
+.type-flying { background-color: #A98FF3; }
+.type-psychic { background-color: #F95587; }
+.type-bug { background-color: #A6B91A; }
+.type-rock { background-color: #B6A136; }
+.type-ghost { background-color: #735797; }
+.type-dragon { background-color: #6F35FC; }
+.type-steel { background-color: #B7B7CE; }
+.type-dark { background-color: #705746; }
+.type-fairy { background-color: #D685AD; }
+.type-unknown { background-color: #68A090; }
+.type-shadow { background-color: #68A090; }
+
+/* Styling voor de modal */
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+}
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 1.5rem; /* Meer afgeronde hoeken voor de modal */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    animation: fadeInScale 0.3s ease-out;
+}
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Styling voor loading screen */
+.loading-screen {
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 1000;
+}
+.spinner {
+    border: 8px solid #f3f3f3; /* Lichtgrijze cirkel */
+    border-top: 8px solid #3498db; /* Blauwe "spinning" deel */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Styling voor cookies banner */
+.cookies-banner {
+    background-color: #333;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    z-index: 500;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+}
+.cookies-banner button {
+    background-color: #4CAF50; /* Groene knop */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+}
+.cookies-banner button:hover {
+    background-color: #45a049;
+}
